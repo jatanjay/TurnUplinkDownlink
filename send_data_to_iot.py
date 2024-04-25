@@ -1,6 +1,6 @@
 """
 Auth: Jatan Pandya
-Script to send downlink messages sequentially using boto3 sdk
+Script to send downlink messages sequentially using boto3 sdk aws
 """
 
 import boto3
