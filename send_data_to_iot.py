@@ -1,3 +1,8 @@
+"""
+Auth: Jatan Pandya
+Script to send downlink messages sequentially using boto3 sdk
+"""
+
 import boto3
 import time
 import base64 
