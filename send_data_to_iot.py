@@ -15,7 +15,7 @@ def send_data(freq, total_N):
     device_id = "5ac752d9-a6ab-4ba0-bef5-304a0cc41c9b"
     transmit_mode = 1 
     
-    for i in range(freq):  
+    for i in range(total_N):  
         PAYLOAD_DATA_RAW = f"MSG={random.randint(1,2)} SEQ={seq}"
         PAYLOAD_BYTE = PAYLOAD_DATA_RAW.encode("ascii")
         PAYLOAD_BYTE_BASE_64 = base64.b64encode(PAYLOAD_BYTE)
@@ -38,6 +38,6 @@ def send_data(freq, total_N):
         )
         seq += 1
         print(PAYLOAD_DATA_RAW)
-        time.sleep(total_N)
+        time.sleep(freq)
 
-send_data(100,20)
+send_data(20,100)
