@@ -1,5 +1,6 @@
-import sys,base64, codecs, struct
+# jatan pandya
 
+import sys,base64, codecs, struct
 
 def hex_to_dict(hex_string):
     struct_format = "<2s 3s 4s 6s B 13s 2s B"
