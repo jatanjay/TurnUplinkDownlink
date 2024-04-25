@@ -60,6 +60,8 @@ class Downlink:
         ## Class Variables
         self.payload_raw = ''
         self.payload = ''
+        self.aws_client = boto3.client('iotwireless')
+
 
     def configure(self):
         """
@@ -152,7 +154,6 @@ class Downlink:
 
     def awsDownlink(self, N, freq, device_id="5ac752d9-a6ab-4ba0-bef5-304a0cc41c9b"):
         self.prep()
-        iotwireless = boto3.client('iotwireless')
         transmit_mode = 1
 
         for i in range(1,N+1):  
@@ -164,7 +165,7 @@ class Downlink:
                 }
             }
 
-            response = iotwireless.send_data_to_wireless_device(
+            response = self.aws_client.send_data_to_wireless_device(
                 Id=device_id,
                 TransmitMode=transmit_mode,
                 PayloadData=self.payload,
