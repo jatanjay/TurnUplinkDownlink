@@ -5,7 +5,7 @@ Script to send downlink messages sequentially using boto3 sdk aws // 4/25
 
 import boto3
 import time
-import base64 
+import base64
 import random
 
 
@@ -13,14 +13,13 @@ def send_data(freq, total_N):
     seq = 0
     iotwireless = boto3.client('iotwireless')
     device_id = "5ac752d9-a6ab-4ba0-bef5-304a0cc41c9b"
-    transmit_mode = 1 
-    
-    for i in range(total_N):  
+    transmit_mode = 1
+
+    for i in range(total_N):
         PAYLOAD_DATA_RAW = f"MSG={random.randint(1,2)} SEQ={seq}"
         PAYLOAD_BYTE = PAYLOAD_DATA_RAW.encode("ascii")
         PAYLOAD_BYTE_BASE_64 = base64.b64encode(PAYLOAD_BYTE)
         PAYLOAD_BYTE_STR = PAYLOAD_BYTE_BASE_64.decode("ascii")
-
 
         wireless_metadata = {
             "Sidewalk": {
@@ -40,4 +39,5 @@ def send_data(freq, total_N):
         print(PAYLOAD_DATA_RAW)
         time.sleep(freq)
 
-send_data(20,100)
+
+send_data(20, 100)

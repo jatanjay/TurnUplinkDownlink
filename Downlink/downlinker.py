@@ -3,9 +3,12 @@ Auth: Jatan Pandya 4/25/2024
 Script to prepare Downlink Payload
 """
 
-import boto3
+# import boto3
 import time
 import base64
+import json
+import argparse
+import os
 
 
 class Downlink:
@@ -53,6 +56,8 @@ class Downlink:
         Display_Set="DEFAULT",
         BinID_Set="DEFAULT",
         NFC_Merch_Set="DEFAULT",
+        BOOT_MODE="DEFAULT",
+        SEP="<SEP>",
     ):
         self.Buzzer_Set = Buzzer_Set
         self.NFC_Set = NFC_Set
@@ -61,23 +66,32 @@ class Downlink:
         self.Display_Set = Display_Set
         self.BinID_Set = BinID_Set
         self.NFC_Merch_Set = NFC_Merch_Set
+        self.BOOT_MODE = BOOT_MODE
 
-        ## Class Variables
+        # Config vars
+        self.SEP = SEP
+
+        # Class Variables
         self.payload_raw = ""
         self.payload = ""
-        self.aws_client = boto3.client("iotwireless")
 
+        # self.aws_client = boto3.client("iotwireless")
 
     def __str__(self):
-        return (f"Buzzer_Set: {self.Buzzer_Set}, "
-                f"NFC_Set: {self.NFC_Set}, "
-                f"Bin_Level: {self.Bin_Level}, "
-                f"UHF_Power: {self.UHF_Power}, "
-                f"Display_Set: {self.Display_Set}, "
-                f"BinID_Set: {self.BinID_Set}, "
-                f"NFC_Merch_Set: {self.NFC_Merch_Set}")
+        return (
+            f"\n=== Settings Summary ===\n"
+            f"Buzzer Setting: {self.Buzzer_Set}\n"
+            f"NFC Setting: {self.NFC_Set}\n"
+            f"Bin Level: {self.Bin_Level}\n"
+            f"UHF Power: {self.UHF_Power}\n"
+            f"Display Setting: {self.Display_Set}\n"
+            f"Bin ID Setting: {self.BinID_Set}\n"
+            f"NFC Merchant Setting: {self.NFC_Merch_Set}\n"
+            f"Boot Mode: {self.BOOT_MODE}\n"
+            f"<SEP>: '{self.SEP}'\n"
+            f"========================\n"
+        )
 
-    
     def configure(self):
         """
         make lower level abstraction changes. Allowing backend to have control over variables.
@@ -95,8 +109,9 @@ class Downlink:
                 "high": "2",
             },
             "FLAG": {"enable": "1", "disable": "0"},
-            # Set Internal ID for each Venue. E.g. User's Pepsi will interpreted as P101_East at backend
-            "VENUE": {"venue1": "Venue_1", "venue2": "Venue_2", "venue3": "Venue_3"},
+            # Set Internal ID for each Venue. E.g. User's Pepsi will
+            # interpreted as P101_East at backend
+            "VENUE": {"pepsi_east": "PEPSIEASTNYC01", "pepsi_west": "PEPSIWESTSF03", "pepsi_mid": "PEPSIMIDCHI07"},
         }
 
         if self.Buzzer_Set.lower() in SetMap["LEVEL"]:
@@ -105,7 +120,7 @@ class Downlink:
             pass
         else:
             raise ValueError(
-                "Acceptable parameters for <Buzzer_Set> are 'low', 'medium', or 'high'"
+                f"Acceptable parameters for <Buzzer_Set> are {', '.join(SetMap['LEVEL'].keys())}"
             )
 
         if self.NFC_Set.lower() in SetMap["FLAG"]:
@@ -114,7 +129,7 @@ class Downlink:
             pass
         else:
             raise ValueError(
-                "Acceptable parameters for <NFC_Set> are 'enable' or 'disable'"
+                f"Acceptable parameters for <NFC_Set> are {', '.join(SetMap['FLAG'].keys())}"
             )
 
         if self.Bin_Level.lower() in SetMap["LEVEL"]:
@@ -123,7 +138,7 @@ class Downlink:
             pass
         else:
             raise ValueError(
-                "Acceptable parameters for <Bin_Level> are 'low', 'medium', or 'high'"
+                F"Acceptable parameters for <Bin_Level> are {', '.join(SetMap['LEVEL'].keys())}"
             )
 
         if self.UHF_Power.lower() in SetMap["LEVEL"]:
@@ -132,7 +147,7 @@ class Downlink:
             pass
         else:
             raise ValueError(
-                "Acceptable parameters for <UHF_Power> are 'low', 'medium', or 'high'"
+                f"Acceptable parameters for <UHF_Power> are {', '.join(SetMap['LEVEL'].keys())}"
             )
 
         if self.Display_Set.lower() in SetMap["VENUE"]:
@@ -141,7 +156,7 @@ class Downlink:
             pass
         else:
             raise ValueError(
-                "Acceptable parameters for <Display_Set> are 'VENUE1', 'VENUE1', or 'VENUE1'"
+                f"Acceptable parameters for <Display_Set> are {', '.join(SetMap['VENUE'].keys())}"
             )
 
     def payloadStruct(self):
@@ -174,7 +189,8 @@ class Downlink:
         self.payloadStruct()
         self.encoder()
 
-    def awsDownlink(self, N, freq, device_id="5ac752d9-a6ab-4ba0-bef5-304a0cc41c9b"):
+    def awsDownlink(self, N, freq,
+                    device_id="5ac752d9-a6ab-4ba0-bef5-304a0cc41c9b"):
         self.prep()
         transmit_mode = 1
 
@@ -199,17 +215,57 @@ class Downlink:
         print("\nCompleted!\n")
 
 
+def load_config(config_file, routine):
+    with open(config_file, "r") as f:
+        config_data = json.load(f)
+    return config_data.get(routine, {})
+
+
 def main():
-    dl = Downlink(
-        Buzzer_Set="LOW",
-        NFC_Set="ENABLE",
-        Bin_Level="LOW",
-        UHF_Power="LOW",
-        Display_Set="VENUE1",
-        BinID_Set="JP001",
-        NFC_Merch_Set="VTAP010",
+    parser = argparse.ArgumentParser(
+        description="Script to prepare Downlink Payload")
+    parser.add_argument(
+        "--config", default="config.json", help="Path to the config file"
     )
-    dl.awsDownlink(N=10, freq=1)
+    parser.add_argument(
+        "--routine",
+        default="default",
+        help="Routine to use from the config file")
+    args = parser.parse_args()
+
+    config_file = args.config
+    routine = args.routine
+
+    if not os.path.isfile(config_file):
+        print(f"Config file '{config_file}' not found!")
+        return
+
+    config = load_config(config_file, routine)
+
+    dl = Downlink(
+        Buzzer_Set=config.get("Buzzer_Set", "DEFAULT"),
+        NFC_Set=config.get("NFC_Set", "DEFAULT"),
+        Bin_Level=config.get("Bin_Level", "DEFAULT"),
+        UHF_Power=config.get("UHF_Power", "DEFAULT"),
+        Display_Set=config.get("Display_Set", "DEFAULT"),
+        BinID_Set=config.get("BinID_Set", "DEFAULT"),
+        NFC_Merch_Set=config.get("NFC_Merch_Set", "DEFAULT"),
+        BOOT_MODE=config.get("BOOT_MODE", "DEFAULT"),
+        SEP=config.get("SEP", "<SEP>"),
+    )
+
+    print(dl)
+
+    if dl.BOOT_MODE.lower() == "true":
+        confirmation = input(
+            "BOOT_MODE is set to TRUE. Proceed with Caution. Continue? (y/n): "
+        )
+        if confirmation.lower() != "y":
+            print("Exiting...")
+            return
+
+    dl.awsDownlink(N=config.get("N"), freq=config.get("FREQ"))
 
 
-main()
+if __name__ == "__main__":
+    main()

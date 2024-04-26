@@ -1,0 +1,41 @@
+{
+    "default": {
+        "Buzzer_Set": "DEFAULT",
+        "NFC_Set": "DEFAULT",
+        "Bin_Level": "DEFAULT",
+        "UHF_Power": "DEFAULT",
+        "Display_Set": "DEFAULT",
+        "BinID_Set": "DEFAULT",
+        "NFC_Merch_Set": "DEFAULT",
+        "BOOT_MODE": "DEFAULT",
+        "N": "10",
+        "FREQ": "5",
+        "SEP": "-"
+    },
+    "routine1": {
+        "Buzzer_Set": "LOW",
+        "NFC_Set": "ENABLE",
+        "Bin_Level": "LOW",
+        "UHF_Power": "LOW",
+        "Display_Set": "PEPSI_EAST",
+        "BinID_Set": "JP001",
+        "NFC_Merch_Set": "VTAP010",
+        "BOOT_MODE": "TRUE",
+        "N": "40",
+        "FREQ": "2",
+        "SEP": ""
+    },
+    "routine2": {
+        "Buzzer_Set": "MEDIUM",
+        "NFC_Set": "DISABLE",
+        "Bin_Level": "HIGH",
+        "UHF_Power": "MEDIUM",
+        "Display_Set": "PEPSI_MID",
+        "BinID_Set": "JP002",
+        "NFC_Merch_Set": "VTAP011",
+        "BOOT_MODE": "FALSE",
+        "N": "30",
+        "FREQ": "10",
+        "SEP": ":"
+    }
+}
