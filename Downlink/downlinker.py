@@ -3,7 +3,7 @@ Auth: Jatan Pandya 4/25/2024
 Script to prepare Downlink Payload
 """
 
-# import boto3
+import boto3
 import time
 import base64
 import json
@@ -75,7 +75,7 @@ class Downlink:
         self.payload_raw = ""
         self.payload = ""
 
-        # self.aws_client = boto3.client("iotwireless")
+        self.aws_client = boto3.client("iotwireless")
 
     def __str__(self):
         return (
@@ -264,7 +264,7 @@ def main():
             print("Exiting...")
             return
 
-    dl.awsDownlink(N=config.get("N"), freq=config.get("FREQ"))
+    dl.awsDownlink(N=int(config.get("N")), freq=int(config.get("FREQ")))
 
 
 if __name__ == "__main__":
