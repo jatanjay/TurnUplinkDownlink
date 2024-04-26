@@ -67,6 +67,17 @@ class Downlink:
         self.payload = ""
         self.aws_client = boto3.client("iotwireless")
 
+
+    def __str__(self):
+        return (f"Buzzer_Set: {self.Buzzer_Set}, "
+                f"NFC_Set: {self.NFC_Set}, "
+                f"Bin_Level: {self.Bin_Level}, "
+                f"UHF_Power: {self.UHF_Power}, "
+                f"Display_Set: {self.Display_Set}, "
+                f"BinID_Set: {self.BinID_Set}, "
+                f"NFC_Merch_Set: {self.NFC_Merch_Set}")
+
+    
     def configure(self):
         """
         make lower level abstraction changes. Allowing backend to have control over variables.
