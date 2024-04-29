@@ -36,6 +36,15 @@ class Downlink:
     Configures NFC parameters for updating the merchant ID.
     07 = NFC_Merch_Set
 
+    Bool Flag if the device has to enter "boot mode"
+    08 - BOOT_MODE
+
+    Seperator char between each config
+    09 - <SEP>
+
+    AWS Device id the payload has to be sent
+    10 - DEVICE_ID
+
     Example :
 
     Buzzer_Set = "Low"
@@ -45,6 +54,52 @@ class Downlink:
     Display_Set = "Venue_1"
     BinID_Set = "QTLLC"
     NFC_Merch_Set = "VTAP007"
+    BOOT_MODE = "True"
+    SEP = ","
+    DEVICE_ID = "5ac752d9-a6ab-4ba0-bef5-304a0cc41c9b"
+
+
+
+
+    //    
+    - Ensure you have your AWS account configured and authorized.
+    - Install the boto3 SDK (Python3 AWS SDK).
+    -- Run `pip3 install -r requirements.txt` for dependencies (well, only boto3, rest are std. py libs)
+    //
+
+    Upon execution, the script performs the following steps:
+        - Parses command-line arguments or reads settings from a configuration file.
+        - Configures the downlink payload based on the specified settings.
+        - Encodes the payload into Base64 format.
+        - Sends the payload to the specified IoT device using AWS IoT Wireless.
+
+        
+    ## Usage
+        ### Command-line Arguments
+        - --config: Path to the configuration file (default: "<curr/working/dir/config.json>").
+        - --routine: Routine to use from the configuration file (default: "default").
+
+    Script Usage
+
+    Run the script using the command:
+
+    python3 downlinker.py --config </path/to/config.json> --routine <name_of_the_routine>
+
+    By default:
+        The script looks for config.json in the current working directory.
+        If no “–-routine” is supplied, the script runs the “default” routine.
+
+    Example Usages
+    Run with default settings:
+
+        python3 downlinker.py
+
+    Run with a specific routine:
+
+        python3 downlinker.py --routine routine1
+
+    See config.json for struct
+
     """
 
     def __init__(
