@@ -10,7 +10,8 @@
         "BOOT_MODE": "DEFAULT",
         "N": "10",
         "FREQ": "5",
-        "SEP": "-"
+        "SEP": "-",
+        "DEVICE_ID": "5ac752d9-a6ab-4ba0-bef5-304a0cc41c9b"
     },
     "routine1": {
         "Buzzer_Set": "LOW",
@@ -23,7 +24,8 @@
         "BOOT_MODE": "TRUE",
         "N": "40",
         "FREQ": "2",
-        "SEP": ""
+        "SEP": "",
+        "DEVICE_ID": "5ac752d9-a6ab-4ba0-bef5-304a0cc41c9C"
     },
     "routine2": {
         "Buzzer_Set": "MEDIUM",
@@ -36,6 +38,7 @@
         "BOOT_MODE": "FALSE",
         "N": "30",
         "FREQ": "10",
-        "SEP": ":"
+        "SEP": ":",
+        "DEVICE_ID": "5ac752d9-a6ab-4ba0-bef5-304a0cc41c9A"
     }
 }

@@ -58,15 +58,17 @@ class Downlink:
         NFC_Merch_Set="DEFAULT",
         BOOT_MODE="DEFAULT",
         SEP="<SEP>",
+        DEVICE_ID="DEFAULT"
     ):
-        self.Buzzer_Set = Buzzer_Set
-        self.NFC_Set = NFC_Set
-        self.Bin_Level = Bin_Level
-        self.UHF_Power = UHF_Power
-        self.Display_Set = Display_Set
-        self.BinID_Set = BinID_Set
-        self.NFC_Merch_Set = NFC_Merch_Set
+        self.Buzzer_Set = Buzzer_Set.lower()
+        self.NFC_Set = NFC_Set.lower()
+        self.Bin_Level = Bin_Level.lower()
+        self.UHF_Power = UHF_Power.lower()
+        self.Display_Set = Display_Set.lower()
+        self.BinID_Set = BinID_Set.lower()
+        self.NFC_Merch_Set = NFC_Merch_Set.lower()
         self.BOOT_MODE = BOOT_MODE
+        self.DEVICE_ID = DEVICE_ID
 
         # Config vars
         self.SEP = SEP
@@ -89,6 +91,7 @@ class Downlink:
             f"NFC Merchant Setting: {self.NFC_Merch_Set}\n"
             f"Boot Mode: {self.BOOT_MODE}\n"
             f"<SEP>: '{self.SEP}'\n"
+            f"DEVICE_ID: '{self.DEVICE_ID}'\n"
             f"========================\n"
         )
 
@@ -114,8 +117,8 @@ class Downlink:
             "VENUE": {"pepsi_east": "PEPSIEASTNYC01", "pepsi_west": "PEPSIWESTSF03", "pepsi_mid": "PEPSIMIDCHI07"},
         }
 
-        if self.Buzzer_Set.lower() in SetMap["LEVEL"]:
-            self.Buzzer_Set = SetMap["LEVEL"][self.Buzzer_Set.lower()]
+        if self.Buzzer_Set in SetMap["LEVEL"]:
+            self.Buzzer_Set = SetMap["LEVEL"][self.Buzzer_Set]
         elif self.Buzzer_Set == "DEFAULT":
             pass
         else:
@@ -123,8 +126,8 @@ class Downlink:
                 f"Acceptable parameters for <Buzzer_Set> are {', '.join(SetMap['LEVEL'].keys())}"
             )
 
-        if self.NFC_Set.lower() in SetMap["FLAG"]:
-            self.NFC_Set = SetMap["FLAG"][self.NFC_Set.lower()]
+        if self.NFC_Set in SetMap["FLAG"]:
+            self.NFC_Set = SetMap["FLAG"][self.NFC_Set]
         elif self.NFC_Set == "DEFAULT":
             pass
         else:
@@ -132,8 +135,8 @@ class Downlink:
                 f"Acceptable parameters for <NFC_Set> are {', '.join(SetMap['FLAG'].keys())}"
             )
 
-        if self.Bin_Level.lower() in SetMap["LEVEL"]:
-            self.Bin_Level = SetMap["LEVEL"][self.Bin_Level.lower()]
+        if self.Bin_Level in SetMap["LEVEL"]:
+            self.Bin_Level = SetMap["LEVEL"][self.Bin_Level]
         elif self.Bin_Level == "DEFAULT":
             pass
         else:
@@ -141,8 +144,8 @@ class Downlink:
                 F"Acceptable parameters for <Bin_Level> are {', '.join(SetMap['LEVEL'].keys())}"
             )
 
-        if self.UHF_Power.lower() in SetMap["LEVEL"]:
-            self.UHF_Power = SetMap["LEVEL"][self.UHF_Power.lower()]
+        if self.UHF_Power in SetMap["LEVEL"]:
+            self.UHF_Power = SetMap["LEVEL"][self.UHF_Power]
         elif self.UHF_Power == "DEFAULT":
             pass
         else:
@@ -150,8 +153,8 @@ class Downlink:
                 f"Acceptable parameters for <UHF_Power> are {', '.join(SetMap['LEVEL'].keys())}"
             )
 
-        if self.Display_Set.lower() in SetMap["VENUE"]:
-            self.Display_Set = SetMap["VENUE"][self.Display_Set.lower()]
+        if self.Display_Set in SetMap["VENUE"]:
+            self.Display_Set = SetMap["VENUE"][self.Display_Set]
         elif self.Display_Set == "DEFAULT":
             pass
         else:
@@ -190,9 +193,12 @@ class Downlink:
         self.encoder()
 
     def awsDownlink(self, N, freq,
-                    device_id="5ac752d9-a6ab-4ba0-bef5-304a0cc41c9b"):
+                    device_id=None):
         self.prep()
         transmit_mode = 1
+
+        if device_id is None:
+            device_id = self.DEVICE_ID
 
         for i in range(1, N + 1):
             wireless_metadata = {
@@ -231,6 +237,7 @@ def main():
         "--routine",
         default="default",
         help="Routine to use from the config file")
+
     args = parser.parse_args()
 
     config_file = args.config
@@ -252,6 +259,7 @@ def main():
         NFC_Merch_Set=config.get("NFC_Merch_Set", "DEFAULT"),
         BOOT_MODE=config.get("BOOT_MODE", "DEFAULT"),
         SEP=config.get("SEP", "<SEP>"),
+        DEVICE_ID=config.get("DEVICE_ID", "DEFAULT")
     )
 
     print(dl)
