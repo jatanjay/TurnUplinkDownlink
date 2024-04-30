@@ -13,39 +13,22 @@ import os
 
 class Downlink:
     """
-    Structure:
+    Configures settings for a remote IoT device and sends the configuration payload using AWS IoT Wireless.
 
-    Sets the buzzer volume to Low, Medium, or High (0, 1, 2).
-    01 = Buzzer_Set
+    The script enables customization of various parameters for the IoT device. Each setting corresponds to a specific action, indicated by a numerical code:
 
-    Enables or disables the NFC reader.
-    02 = NFC_Set
+    01 = Sets the buzzer volume to Low, Medium, or High (0, 1, 2).
+    02 = Enables or disables the NFC reader.
+    03 = Sets the "Bin Full" sensor alert distance to 0, 1, or 2.
+    04 = Adjusts the UHF reader power to 0, 1, or 2.
+    05 = Customizes the LED display for Venue 1, Venue 2, or Venue 3.
+    06 = Assigns a unique ID to each Topper board.
+    07 = Configures NFC parameters for updating the merchant ID.
+    08 = Boolean flag indicating if the device has to enter "boot mode".
+    09 = Separator character between each configuration.
+    10 = AWS Device ID the payload has to be sent to.
 
-    Sets the "Bin Full" sensor alert distance to 0, 1, or 2.
-    03 = Bin_Level
-
-    Adjusts the UHF reader power to 0, 1, or 2.
-    04 = UHF_Power
-
-    Customizes the LED display for Venue 1, Venue 2, or Venue 3.
-    05 = Display_Set
-
-    Assigns a unique ID to each Topper board.
-    06 = BinID_Set
-
-    Configures NFC parameters for updating the merchant ID.
-    07 = NFC_Merch_Set
-
-    Bool Flag if the device has to enter "boot mode"
-    08 - BOOT_MODE
-
-    Seperator char between each config
-    09 - <SEP>
-
-    AWS Device id the payload has to be sent
-    10 - DEVICE_ID
-
-    Example :
+    Example Configuration:
 
     Buzzer_Set = "Low"
     NFC_Set = "Enable"
@@ -58,49 +41,43 @@ class Downlink:
     SEP = ","
     DEVICE_ID = "5ac752d9-a6ab-4ba0-bef5-304a0cc41c9b"
 
-
-
-
-    //    
-    - Ensure you have your AWS account configured and authorized.
-    - Install the boto3 SDK (Python3 AWS SDK).
-    -- Run `pip3 install -r requirements.txt` for dependencies (well, only boto3, rest are std. py libs)
-    //
+    Ensure prerequisites:
+    - AWS account configured and authorized.
+    - Boto3 SDK (Python3 AWS SDK) installed. Run `pip3 install -r requirements.txt` for dependencies.
 
     Upon execution, the script performs the following steps:
-        - Parses command-line arguments or reads settings from a configuration file.
-        - Configures the downlink payload based on the specified settings.
-        - Encodes the payload into Base64 format.
-        - Sends the payload to the specified IoT device using AWS IoT Wireless.
+    - Parses command-line arguments or reads settings from a configuration file.
+    - Configures the downlink payload based on the specified settings.
+    - Encodes the payload into Base64 format.
+    - Sends the payload to the specified IoT device using AWS IoT Wireless.
 
-        
-    ## Usage
-        ### Command-line Arguments
-        - --config: Path to the configuration file (default: "<curr/working/dir/config.json>").
-        - --routine: Routine to use from the configuration file (default: "default").
+    Usage:
+    Command-line Arguments:
+    - --config: Path to the configuration file (default: "<current/working/directory/config.json>").
+    - --routine: Routine to use from the configuration file (default: "default").
 
-    Script Usage
+    Script Usage:
 
     Run the script using the command:
 
     python3 downlinker.py --config </path/to/config.json> --routine <name_of_the_routine>
 
     By default:
-        The script looks for config.json in the current working directory.
-        If no “–-routine” is supplied, the script runs the “default” routine.
+    - The script looks for config.json in the current working directory.
+    - If no “--routine” is supplied, the script runs the “default” routine.
 
-    Example Usages
-    Run with default settings:
+    Example Usages:
+    - Run with default settings:
 
-        python3 downlinker.py
+    python3 downlinker.py
 
-    Run with a specific routine:
+    - Run with a specific routine:
 
-        python3 downlinker.py --routine routine1
+    python3 downlinker.py --routine routine1
 
-    See config.json for struct
-
+    See config.json for structure.
     """
+
 
     def __init__(
         self,
