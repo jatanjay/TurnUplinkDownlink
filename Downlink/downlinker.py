@@ -146,7 +146,7 @@ class Downlink:
             "FLAG": {"enable": "1", "disable": "0"},
             # Set Internal ID for each Venue. E.g. User's Pepsi will
             # interpreted as P101_East at backend
-            "VENUE": {"pepsi_east": "PEPSIEASTNYC01", "pepsi_west": "PEPSIWESTSF03", "pepsi_mid": "PEPSIMIDCHI07"},
+            "VENUE": {"pepsi_east": "pep", "pepsi_west": "PEPSIWESTSF03", "pepsi_mid": "PEPSIMIDCHI07"},
         }
 
         if self.Buzzer_Set in SetMap["LEVEL"]:
@@ -236,8 +236,8 @@ class Downlink:
             wireless_metadata = {
                 "Sidewalk": {
                     "Seq": i,
-                    "MessageType": "CUSTOM_COMMAND_ID_NOTIFY",
-                    "AckModeRetryDurationSecs": 60,
+                    "MessageType": "CUSTOM_COMMAND_ID_RESP",
+                    "AckModeRetryDurationSecs": 5,
                 }
             }
 
@@ -247,7 +247,10 @@ class Downlink:
                 PayloadData=self.payload,
                 WirelessMetadata=wireless_metadata,
             )
-
+            print()
+            print(response)
+            print()
+			
             print(f"Payload '{self.payload}' sent to device '{device_id}'")
             time.sleep(freq)
         print("\nCompleted!\n")
