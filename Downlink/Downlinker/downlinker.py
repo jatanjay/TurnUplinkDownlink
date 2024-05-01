@@ -9,7 +9,7 @@ import base64
 import json
 import argparse
 import os
-from pprint import pprint
+
 
 class Downlink:
     """
@@ -195,19 +195,20 @@ class Downlink:
             )
 
     def payloadStruct(self):
+        SEP = ","
         self.payload_raw = (
             self.Buzzer_Set
-            + self.SEP
+            + SEP
             + self.NFC_Set
-            + self.SEP
+            + SEP
             + self.Bin_Level
-            + self.SEP
+            + SEP
             + self.UHF_Power
-            + self.SEP
+            + SEP
             + self.Display_Set
-            + self.SEP
+            + SEP
             + self.BinID_Set
-            + self.SEP
+            + SEP
             + self.NFC_Merch_Set
         )
         print(f"\nRaw Payload : {self.payload_raw}\n")
@@ -246,11 +247,11 @@ class Downlink:
                 PayloadData=self.payload,
                 WirelessMetadata=wireless_metadata,
             )
-            print("-------------------------------------------------------------------------------------------------\n")
-            pprint(response)
-            print(f"\nPayload '{self.payload}' sent to device '{device_id}'")
-            print("\n-------------------------------------------------------------------------------------------------\n")
-
+            print()
+            print(response)
+            print()
+			
+            print(f"Payload '{self.payload}' sent to device '{device_id}'")
             time.sleep(freq)
         print("\nCompleted!\n")
 
