@@ -1,4 +1,5 @@
 # jatan pandya
+# script to parse
 
 import sys,base64, codecs, struct
 
